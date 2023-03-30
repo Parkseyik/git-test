@@ -50,17 +50,36 @@ app.post("/users/signin", async (req, res) => {
   }
 
   return res.json({ userId: user.id });
-});
+  app.post("/users/signup", async (req, res) => {
+    const { username, email, password } = req.body;
+    return await myDataSource.query(
+      `
+      INSERT INTO
+        users (
+          username,
+          email,
+          password			
+        )
+      VALUES (
+        ?,
+        ?,
+        ?
+      )
+    `,
+      [username, email, password]
+    );
+  });
 
-app.listen(PORT, () => {
-  myDataSource
-    .initialize()
-    .then(() => {
-      console.log("DB Connection has been initialized");
-    })
-    .catch(() => {
-      console.log("DB Connection has been failed");
-    });
+  app.listen(PORT, () => {
+    myDataSource
+      .initialize()
+      .then(() => {
+        console.log("DB Connection has been initialized");
+      })
+      .catch(() => {
+        console.log("DB Connection has been failed");
+      });
 
-  console.log(`Listening to request on localhost:${PORT}`);
+    console.log(`Listening to request on localhost:${PORT}`);
+  });
 });
